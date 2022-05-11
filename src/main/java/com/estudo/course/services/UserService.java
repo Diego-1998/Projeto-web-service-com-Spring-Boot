@@ -4,6 +4,9 @@ import com.estudo.course.entities.User;
 import com.estudo.course.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +35,18 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+
+    public User update(@PathVariable Long id, @RequestBody User user){
+       User entity = userRepository.getById(id);
+       updateData(entity, user);
+       return userRepository.save(entity);
+    }
+
+    private void updateData(User entity, User user) {
+        entity.setName(user.getName());
+        entity.setEmail(user.getEmail());
+        entity.setPhone(user.getPhone());
+    }
 
 
 }
