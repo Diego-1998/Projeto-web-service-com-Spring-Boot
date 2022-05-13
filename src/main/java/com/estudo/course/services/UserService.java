@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,9 +47,13 @@ public class UserService {
       }
 
     public User update(@PathVariable Long id, @RequestBody User user){
-       User entity = userRepository.getById(id);
-       updateData(entity, user);
-       return userRepository.save(entity);
+        try {
+            User entity = userRepository.getById(id);
+            updateData(entity, user);
+            return userRepository.save(entity);
+        } catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User entity, User user) {
